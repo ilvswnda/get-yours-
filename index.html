@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABSURDITY PORTAL</title>
+  <style>
+    body {
+      margin: 0;
+      background: repeating-linear-gradient(45deg, red, yellow 10px, lime 10px, cyan 20px);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      animation: spinbg 10s linear infinite;
+    }
+
+    @keyframes spinbg {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 4rem;
+      color: magenta;
+      text-shadow: 2px 2px lime;
+      animation: wobble 0.4s infinite alternate;
+    }
+
+    @keyframes wobble {
+      0% { transform: rotate(-2deg); }
+      100% { transform: rotate(2deg); }
+    }
+
+    .game {
+      margin: 40px auto;
+      max-width: 600px;
+      padding: 50px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 10px dashed hotpink;
+      border-radius: 50px;
+      box-shadow: 0 0 50px 20px yellow;
+    }
+
+    #tapBtn {
+      font-size: 2rem;
+      padding: 20px;
+      border: 5px dotted blue;
+      background: linear-gradient(to bottom, purple, orange);
+      color: white;
+      border-radius: 25px;
+      animation: bounce 0.3s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .score, .timer {
+      font-size: 2rem;
+      margin-top: 20px;
+      color: darkblue;
+      background: white;
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 20px;
+    }
+
+    .gif-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image: url('https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif');
+      background-repeat: repeat;
+      opacity: 0.2;
+      animation: none;
+    }
+
+    .flying-emoji {
+      position: fixed;
+      font-size: 2rem;
+      animation: float 5s linear infinite;
+      z-index: 1000;
+    }
+
+    @keyframes float {
+      0% {
+        top: -10%;
+        left: 50%;
+      }
+      100% {
+        top: 110%;
+        left: 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="gif-rain"></div>
+  <header>
+    <h1>🌈 WELCOME TO CHAOS ZONE 🎉</h1>
+    <p style="font-size: 1.5rem; color: #fff;">How fast can your brain handle the absurdity?</p>
+  </header>
+
+  <div class="game">
+    <button id="tapBtn" onclick="tap()">🔮 CLICK ME FOR SURPRISES 🔮</button>
+    <div class="score" id="score">Score: 0</div>
+    <div class="timer" id="timer">Time Left: 10s</div>
+  </div>
+
+  <audio id="boing" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
+  <script>
+    let score = 0;
+    let timeLeft = 10;
+    let gameStarted = false;
+    let countdown;
+    const bgColors = ['red', 'blue', 'green', 'purple', 'black', 'hotpink'];
+
+    function tap() {
+      if (!gameStarted) {
+        gameStarted = true;
+        countdown = setInterval(() => {
+          timeLeft--;
+          document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+          if (timeLeft <= 0) {
+            clearInterval(countdown);
+            document.getElementById("tapBtn").disabled = true;
+            document.getElementById("tapBtn").innerText = "💥 TIME'S UP! 💥";
+            document.body.style.background = 'black';
+          }
+        }, 1000);
+        setInterval(changeBg, 1000);
+      }
+
+      if (timeLeft > 0) {
+        score++;
+        document.getElementById("score").innerText = `Score: ${score}`;
+
+        // Play sound
+        document.getElementById("boing").play();
+
+        // Show alert
+        const messages = ["🦄 MAGIC!", "🐸 RIBBIT!", "🍕 PIZZA POWER!", "💥 ZAP!", "🎉 WOWZA!"];
+        alert(messages[Math.floor(Math.random() * messages.length)]);
+
+        // Create flying emoji
+        const emoji = document.createElement("div");
+        emoji.className = "flying-emoji";
+        emoji.style.left = Math.random() * 100 + "%";
+        emoji.innerText = ["🎈","👾","🦩","🚀","😹"][Math.floor(Math.random() * 5)];
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 5000);
+      }
+    }
+
+    function changeBg() {
+      const rand = Math.floor(Math.random() * bgColors.length);
+      document.body.style.background = bgColors[rand];
+    }
+  </script>
+</body>
+</html>
